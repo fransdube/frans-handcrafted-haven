@@ -1,0 +1,35 @@
+
+> handcrafted-haven@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+✓ Ready in 1173ms
+(node:2966) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /products?search=Hat 200 in 2.9s (compile: 1541ms, render: 1336ms)
+ GET / 200 in 1366ms (compile: 553ms, render: 814ms)
+ GET /products?search=Hat 200 in 421ms (compile: 4ms, render: 417ms)
+ GET /products?search=Hat 200 in 494ms (compile: 9ms, render: 485ms)
+ GET / 200 in 319ms (compile: 5ms, render: 314ms)
+ GET /products 200 in 246ms (compile: 4ms, render: 243ms)
+⨯ upstream image response failed for https://hglnbjxvpxtjcwkj.public.blob.vercel-storage.com/products/1770897760254-leather_boots-Y3H4HxXFB1qNyF4wl0XhiPUA9TAXRD.webp 404
+ GET / 200 in 354ms (compile: 3ms, render: 351ms)
+ GET /products?tag=outlet 200 in 280ms (compile: 3ms, render: 277ms)
+⨯ upstream image response failed for https://hglnbjxvpxtjcwkj.public.blob.vercel-storage.com/products/1770897760254-leather_boots-Y3H4HxXFB1qNyF4wl0XhiPUA9TAXRD.webp 404
+⨯ upstream image response failed for https://hglnbjxvpxtjcwkj.public.blob.vercel-storage.com/products/1770897760254-leather_boots-Y3H4HxXFB1qNyF4wl0XhiPUA9TAXRD.webp 404
+ GET /products 200 in 597ms (compile: 4ms, render: 592ms)
+ GET /products?category=Jewelry 200 in 95ms (compile: 4ms, render: 91ms)
+⨯ upstream image response failed for https://hglnbjxvpxtjcwkj.public.blob.vercel-storage.com/products/1770897760254-leather_boots-Y3H4HxXFB1qNyF4wl0XhiPUA9TAXRD.webp 404
+ GET /products 200 in 536ms (compile: 3ms, render: 533ms)
+ GET /products/9a1ab391-c528-4305-9e84-c71dc3225c45 200 in 1286ms (compile: 1067ms, render: 219ms)

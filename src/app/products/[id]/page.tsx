@@ -14,16 +14,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     include: {
         seller: {
             include: {
-                reviews: true, // This gets reviews for the seller (User), but maybe we want reviews for the product?
-                // Schema has Product.reviews and User.reviews.
-                // Wait, User.reviews might be reviews WRITTEN by the user or reviews RECEIVED?
-                // Schema:
-                // model User { reviews Review[] ... } -> This is usually reviews written by user?
-                // model Review { userId String, user User ... } -> Yes.
-
-                // We need rating for the seller. Schema doesn't have aggregate rating.
-                // We can compute it or fetch all products of seller -> reviews?
-                // For simplicity, let's just fetch product reviews.
+                reviews: true,
             }
         },
         images: true,
@@ -85,7 +76,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           <div>
              <div className="mb-6">
                 <Link href={`/sellers/${product.seller.id}`} className="text-sm font-medium text-stone-500 hover:underline">
-                   {product.seller.name}
+                   {product.seller.name || "Unknown Seller"}
                 </Link>
                 <h1 className="text-3xl font-bold mt-1 text-stone-900">{product.title}</h1>
                 <div className="flex items-center gap-1 mt-2">

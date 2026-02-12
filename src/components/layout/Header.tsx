@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, ShoppingCart, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { SearchBar } from '@/components/SearchBar'
 
 export function Header() {
   return (
@@ -15,16 +15,19 @@ export function Header() {
 
         {/* Categories / Navigation (Hidden on mobile) */}
         <div className="hidden md:flex items-center gap-2">
-            <Button variant="ghost">Categories</Button>
-            <Button variant="ghost">Outlet</Button>
-            <Button variant="ghost">Most Sold</Button>
+            <Link href="/products">
+              <Button variant="ghost">Categories</Button>
+            </Link>
+            <Link href="/products?tag=outlet">
+              <Button variant="ghost">Outlet</Button>
+            </Link>
+            <Link href="/products?sort=popular">
+              <Button variant="ghost">Most Sold</Button>
+            </Link>
         </div>
 
         {/* Search Bar */}
-        <div className="flex-1 max-w-xl relative hidden sm:block">
-           <Input placeholder="Search for anything..." className="pl-10 rounded-full bg-stone-50 border-stone-300" />
-           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-500" />
-        </div>
+        <SearchBar />
 
         {/* Actions */}
         <div className="flex items-center gap-2">

@@ -1,10 +1,66 @@
 import { ProductCard } from "@/components/ProductCard"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { ProductFilters } from "@/components/ProductFilters"
 import { prisma } from "@/lib/prisma"
 
-export default async function ProductsPage() {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: SearchParams
+}) {
+  const { search, category, price, tag, sort } = await searchParams
+
+  const where: any = {}
+
+  if (search) {
+      const term = Array.isArray(search) ? search[0] : search
+      if (term) {
+        where.OR = [
+            { title: { contains: term, mode: 'insensitive' } },
+            { description: { contains: term, mode: 'insensitive' } },
+        ]
+      }
+  }
+
+  if (category) {
+      const categories = Array.isArray(category) ? category : [category]
+      // Only filter if categories are valid strings
+      const validCategories = categories.filter(c => typeof c === 'string')
+      if (validCategories.length > 0) {
+          where.category = { in: validCategories }
+      }
+  }
+
+  if (tag === 'outlet') {
+      // Mock logic for "Outlet": items under $50
+      if (!where.price) where.price = {}
+      where.price.lte = 50
+  }
+
+  if (price && typeof price === 'string') {
+      const [min, max] = price.split('-').map(Number)
+      if (!isNaN(min) && !isNaN(max)) {
+          if (!where.price) where.price = {}
+          where.price.gte = min
+          where.price.lte = max
+      }
+  }
+
+  const orderBy: any = {}
+  if (sort === 'popular') {
+      orderBy.price = 'desc' // Placeholder for popularity
+  } else if (sort === 'price_asc') {
+      orderBy.price = 'asc'
+  } else if (sort === 'price_desc') {
+      orderBy.price = 'desc'
+  } else {
+      orderBy.createdAt = 'desc'
+  }
+
   const products = await prisma.product.findMany({
+    where,
+    orderBy,
     include: {
       seller: true,
       images: true,
@@ -17,66 +73,28 @@ export default async function ProductsPage() {
 
        <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar Filters */}
-          <aside className="w-full md:w-64 space-y-8">
-             <div>
-                <h3 className="font-semibold mb-4">Search</h3>
-                <div className="relative">
-                   <Input placeholder="Search..." />
-                   <Search className="absolute right-3 top-2.5 h-4 w-4 text-stone-500" />
-                </div>
-             </div>
-
-             <div>
-                <h3 className="font-semibold mb-4">Categories</h3>
-                <div className="space-y-2 text-sm text-stone-600">
-                   <label className="flex items-center gap-2">
-                      <input type="checkbox" /> Jewelry
-                   </label>
-                   <label className="flex items-center gap-2">
-                      <input type="checkbox" /> Home Decor
-                   </label>
-                   <label className="flex items-center gap-2">
-                      <input type="checkbox" /> Clothing
-                   </label>
-                   <label className="flex items-center gap-2">
-                      <input type="checkbox" /> Art
-                   </label>
-                </div>
-             </div>
-
-             <div>
-                <h3 className="font-semibold mb-4">Price</h3>
-                 <div className="space-y-2 text-sm text-stone-600">
-                   <label className="flex items-center gap-2">
-                      <input type="radio" name="price" /> Under $25
-                   </label>
-                   <label className="flex items-center gap-2">
-                      <input type="radio" name="price" /> $25 - $50
-                   </label>
-                   <label className="flex items-center gap-2">
-                      <input type="radio" name="price" /> $50 - $100
-                   </label>
-                   <label className="flex items-center gap-2">
-                      <input type="radio" name="price" /> Over $100
-                   </label>
-                </div>
-             </div>
-          </aside>
+          <ProductFilters />
 
           {/* Product Grid */}
           <div className="flex-1">
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((p) => (
-                   <ProductCard
-                     key={p.id}
-                     id={p.id}
-                     title={p.title}
-                     price={p.price}
-                     seller={p.seller.name || "Unknown"}
-                     image={p.images[0]?.url || "https://placehold.co/400x400?text=No+Image"}
-                   />
-                ))}
-             </div>
+             {products.length > 0 ? (
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {products.map((p) => (
+                       <ProductCard
+                         key={p.id}
+                         id={p.id}
+                         title={p.title}
+                         price={p.price}
+                         seller={p.seller.name || "Unknown"}
+                         image={p.images[0]?.url || "https://placehold.co/400x400?text=No+Image"}
+                       />
+                    ))}
+                 </div>
+             ) : (
+                 <div className="text-center py-12">
+                     <p className="text-stone-500 text-lg">No products found matching your criteria.</p>
+                 </div>
+             )}
           </div>
        </div>
     </div>
